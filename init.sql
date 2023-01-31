@@ -74,3 +74,41 @@ CREATE TABLE public.tarifa
         ON DELETE CASCADE
         NOT VALID
 );
+
+CREATE TABLE IF NOT EXISTS public.servicio
+(
+    id_servicio integer NOT NULL DEFAULT 'nextval('servicio_id_servicio_seq'::regclass)',
+    costo_servicio integer,
+    calificacion_servicio integer,
+    unidades_servicio character varying COLLATE pg_catalog."default",
+    fecha_servicio date,
+    estado_servicio boolean,
+    id_oferta integer,
+    CONSTRAINT servicio_pkey PRIMARY KEY (id_servicio),
+    CONSTRAINT servicio_oferta_fkey FOREIGN KEY (id_oferta)
+        REFERENCES public.oferta (id_oferta) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+        NOT VALID
+);
+
+CREATE TABLE IF NOT EXISTS public.oferta
+(
+    id_oferta integer NOT NULL DEFAULT 'nextval('oferta_id_oferta_seq'::regclass)',
+    id_trabajador integer,
+    id_tarifa integer,
+    id_labor integer,
+    CONSTRAINT oferta_pkey PRIMARY KEY (id_oferta),
+    CONSTRAINT oferta_labor_fkey FOREIGN KEY (id_labor)
+        REFERENCES public.labor (id_labor) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT oferta_tarifa_fkey FOREIGN KEY (id_tarifa)
+        REFERENCES public.tarifa (id_tarifa) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT oferta_trabajador_fkey FOREIGN KEY (id_trabajador)
+        REFERENCES public.trabajador (id_trabajador) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
